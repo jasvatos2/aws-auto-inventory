@@ -64,22 +64,42 @@ def setup_logging(log_dir, account_id, log_level):
     return logging.getLogger(__name__)
 
 
-def api_call_with_retry(client, function_name, parameters, max_retries, retry_delay):
+def api_call_with_retry(client, function_name, parameters, max_retries, retry_delay, log):
     """
     Make an API call with exponential backoff.
 
     This function will make an API call with retries. It will exponentially back off
     with a delay of `retry_delay * 2^attempt` for transient errors.
     """
+    def paginator(**kwargs):
+        paginator = client.get_paginator(function_name)
+        if kwargs:
+            page_iterator = paginator.paginate(**kwargs)
+        else:
+            page_iterator = paginator.paginate()
+        all_data = page_iterator.build_full_result()
+        return all_data
+
 
     def api_call():
         for attempt in range(max_retries):
             try:
+                can_paginate = client.can_paginate(function_name)
+            except AttributeError as err:
+                log.info(f"Function {function_name} does not support pagination")
+                can_paginate = False
+            try:
                 function_to_call = getattr(client, function_name)
                 if parameters:
-                    return function_to_call(**parameters)
+                    if can_paginate:
+                        return paginator(**parameters)
+                    else:
+                        return function_to_call(**parameters)
                 else:
-                    return function_to_call()
+                    if can_paginate:
+                        return paginator()
+                    else:
+                        return function_to_call()
             except botocore.exceptions.ClientError as error:
                 error_code = error.response["Error"]["Code"]
                 if error_code == "Throttling":
@@ -138,7 +158,7 @@ def _get_service_data(session, region_name, service, log, max_retries, retry_del
             )
             return None
         api_call = api_call_with_retry(
-            client, function, parameters, max_retries, retry_delay
+            client, function, parameters, max_retries, retry_delay, log
         )
         
         if result_key and result_key.startswith('.'):
