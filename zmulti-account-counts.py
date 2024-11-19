@@ -21,8 +21,8 @@ def parse_service_counts(service_file, service_counts):
         json.dump(all_services, sfw, indent=4)
 
 
-def get_service_counts(output_dir, account_id, service_file_output):
-    # type: (str, str, str) -> Dict
+def get_service_counts(output_dir, service_file_output):
+    # type: (str, str) -> Dict
     """
     Loop output json files and get service counts
     """
@@ -49,7 +49,7 @@ def loop_accounts(args):
     Loop AWS accounts and get service counts
     """
     with open(args.accounts_file, 'r') as afr:
-        accounts = afr.readlines()
+        accounts = afr.read().splitlines()
 
     aws_arn_prefix = "arn:aws"
     current_region = "us-east-1"
@@ -62,21 +62,22 @@ def loop_accounts(args):
         sts = boto3.client('sts')
         response = sts.assume_role(
             RoleArn=f'{aws_arn_prefix}:iam::{account}:role/{args.role_name}',
-            RoleSessionName=f'{account}-{args.role_name}')
+            RoleSessionName=f'{args.role_name}-{account}')
 
         credentials = response['Credentials']
-        boto3.session.Session(aws_access_key_id=credentials['AccessKeyId'], aws_secret_access_key=credentials[
+        session = boto3.session.Session(aws_access_key_id=credentials['AccessKeyId'], aws_secret_access_key=credentials[
                               'SecretAccessKey'], aws_session_token=credentials['SessionToken'], region_name=current_region)
 
         scan.main(
             args.scan,
             args.regions,
-            account,
+            args.output_dir,
             args.log_level,
             args.max_retries,
             args.retry_delay,
             args.concurrent_regions,
             args.concurrent_services,
+            session
         )
 
         get_service_counts(args.output_dir, args.service_file_output)

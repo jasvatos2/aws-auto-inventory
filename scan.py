@@ -258,6 +258,7 @@ def main(
     retry_delay,
     concurrent_regions,
     concurrent_services,
+    session = None
 ):
     """
     Main function to perform the AWS services scan.
@@ -271,14 +272,19 @@ def main(
     retry_delay -- The delay before each retry.
     concurrent_regions -- The number of regions to process concurrently.
     concurrent_services -- The number of services to process concurrently for each region.
+    session -- boto3 session (optional)
     """
 
-    session = boto3.Session()
+    if session is None:
+        session = boto3.Session()
     if not check_aws_credentials(session):
         print("Invalid AWS credentials. Please configure your credentials.")
         return
 
-    sts = boto3.client('sts')
+    if session is None:
+        sts = boto3.client('sts')
+    else:
+        sts = session.client('sts')
     account_id = sts.get_caller_identity()['Account']
 
     log = setup_logging(output_dir, account_id, log_level)
