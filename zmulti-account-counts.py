@@ -15,8 +15,10 @@ def parse_service_counts(service_file, service_counts):
     Parse/save recurring count of service resources
     """
     for service in service_counts:
-        all_services[service] = service_counts[service]
-
+        if service in all_services:
+            all_services[service] += service_counts[service]
+        else:
+            all_services[service] = service_counts[service]
     with open(service_file, 'w') as sfw:
         json.dump(all_services, sfw, indent=4)
 
@@ -26,7 +28,7 @@ def get_service_counts(output_dir, service_file_output):
     """
     Loop output json files and get service counts
     """
-    service_counts = []
+    service_counts = {}
     # loop all files in account / regions
     regions = [d for d in os.listdir(
         output_dir) if os.path.isdir(os.path.join(output_dir, d))]
@@ -35,12 +37,16 @@ def get_service_counts(output_dir, service_file_output):
         json_files = [f for f in os.listdir(region_dir_path) if os.path.isfile(
             os.path.join(region_dir_path, f)) and f.endswith(".json")]
         for file in json_files:
-            with open(file, 'r') as readfile:
+            with open(os.path.join(region_dir_path, file), 'r') as readfile:
                 serv_data = json.load(readfile)
             first_key = next(iter(serv_data))
             count = len(serv_data[first_key])
-            service_counts.append({file.split('.')[0]: count})
-        parse_service_counts(service_file_output, service_counts)
+            func_name = file.split('.')[0]
+            if func_name in service_counts:
+                service_counts[func_name] += count
+            else:
+                service_counts[func_name] = count
+    parse_service_counts(service_file_output, service_counts)
 
 
 def loop_accounts(args):
@@ -60,13 +66,17 @@ def loop_accounts(args):
 
     for account in accounts:
         sts = boto3.client('sts')
-        response = sts.assume_role(
-            RoleArn=f'{aws_arn_prefix}:iam::{account}:role/{args.role_name}',
-            RoleSessionName=f'{args.role_name}-{account}')
+        caller_identity = sts.get_caller_identity()
+        if account == caller_identity['Account']:
+            session = boto3.Session()
+        else:
+            response = sts.assume_role(
+                RoleArn=f'{aws_arn_prefix}:iam::{account}:role/{args.role_name}',
+                RoleSessionName=f'{args.role_name}-{account}')
 
-        credentials = response['Credentials']
-        session = boto3.session.Session(aws_access_key_id=credentials['AccessKeyId'], aws_secret_access_key=credentials[
-                              'SecretAccessKey'], aws_session_token=credentials['SessionToken'], region_name=current_region)
+            credentials = response['Credentials']
+            session = boto3.session.Session(aws_access_key_id=credentials['AccessKeyId'], aws_secret_access_key=credentials[
+                                'SecretAccessKey'], aws_session_token=credentials['SessionToken'], region_name=current_region)
 
         scan.main(
             args.scan,
@@ -80,7 +90,7 @@ def loop_accounts(args):
             session
         )
 
-        get_service_counts(args.output_dir, args.service_file_output)
+        get_service_counts(f"{args.output_dir}/{account}", args.service_file_output)
 
 
 if __name__ == "__main__":
