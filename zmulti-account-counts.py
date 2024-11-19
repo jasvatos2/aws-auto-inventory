@@ -90,7 +90,7 @@ if __name__ == "__main__":
                         help='AWS role name to assume in each account')
     parser.add_argument('-a', '--accounts-file', type=str, required=True,
                         help='Name/path to text file containing accounts, each account on a new line')
-    parser.add_argument('-a', '--service-file-output', type=str, default='service-counts.json',
+    parser.add_argument('-f', '--service-file-output', type=str, default='service-counts.json',
                         help='Name/path to text file containing accounts, each account on a new line')
     parser.add_argument(
         "-s",
