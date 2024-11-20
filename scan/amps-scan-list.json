@@ -1,0 +1,226 @@
+[
+    {
+      "function": "list_certificates",
+      "service": "acm"
+    },
+    {
+      "function": "list_certificate_authorities",
+      "service": "acm-pca"
+    },
+    {
+      "function": "get_apis",
+      "service": "apigatewayv2"
+    },
+    {
+      "function": "list_data_catalogs",
+      "service": "athena"
+    },
+    {
+      "function": "list_databases",
+      "service": "athena"
+    },
+    {
+      "function": "list_work_groups",
+      "service": "athena"
+    },
+    {
+      "function": "describe_auto_scaling_groups",
+      "service": "autoscaling"
+    },
+    {
+      "function": "list_backup_vaults",
+      "service": "backup"
+    },
+    {
+      "function": "list_stack_instances",
+      "service": "cloudformation"
+    },
+    {
+      "function": "list_stack_sets",
+      "service": "cloudformation"
+    },
+    {
+      "function": "list_trails",
+      "service": "cloudtrail"
+    },
+    {
+      "function": "list_domains",
+      "service": "codeartifact"
+    },
+    {
+      "function": "list_packages",
+      "service": "codeartifact"
+    },
+    {
+      "function": "list_repositories",
+      "service": "codeartifact"
+    },
+    {
+      "function": "list_projects",
+      "service": "codebuild"
+    },
+    {
+      "function": "list_dev_environments",
+      "service": "codecatalyst"
+    },
+    {
+      "function": "list_projects",
+      "service": "codecatalyst"
+    },
+    {
+      "function": "list_repositories",
+      "service": "codecommit"
+    },
+    {
+      "function": "list_deployment_instances",
+      "service": "codedeploy"
+    },
+    {
+      "function": "list_pipelines",
+      "service": "codepipeline"
+    },
+    {
+      "function": "list_projects",
+      "service": "databrew"
+    },
+    {
+      "function": "list_pipelines",
+      "service": "datapipeline"
+    },
+    {
+      "function": "describe_direct_connect_gateways",
+      "service": "directconnect"
+    },
+    {
+      "function": "list_global_tables",
+      "service": "dynamodb"
+    },
+    {
+      "function": "list_tables",
+      "service": "dynamodb"
+    },
+    {
+      "function": "describe_egress_only_internet_gateways",
+      "service": "ec2"
+    },
+    {
+      "function": "describe_instances",
+      "service": "ec2"
+    },
+    {
+      "function": "describe_internet_gateways",
+      "service": "ec2"
+    },
+    {
+      "function": "describe_nat_gateways",
+      "service": "ec2"
+    },
+    {
+      "function": "describe_reserved_instances",
+      "service": "ec2"
+    },
+    {
+      "function": "describe_transit_gateways",
+      "service": "ec2"
+    },
+    {
+      "function": "describe_volumes",
+      "service": "ec2"
+    },
+    {
+      "function": "describe_vpcs",
+      "service": "ec2"
+    },
+    {
+      "function": "describe_vpn_gateways",
+      "service": "ec2"
+    },
+    {
+      "function": "describe_repositories",
+      "service": "ecr"
+    },
+    {
+      "function": "describe_clusters",
+      "service": "ecs"
+    },
+    {
+      "function": "describe_file_systems",
+      "service": "efs"
+    },
+    {
+      "function": "describe_mount_targets",
+      "service": "efs"
+    },
+    {
+      "function": "list_clusters",
+      "service": "eks"
+    },
+    {
+      "function": "describe_cache_clusters",
+      "service": "elasticache"
+    },
+    {
+      "function": "describe_load_balancers",
+      "service": "elb"
+    },
+    {
+      "function": "describe_load_balancers",
+      "service": "elbv2"
+    },
+    {
+      "function": "list_clusters",
+      "service": "emr"
+    },
+    {
+      "function": "describe_storage_virtual_machines",
+      "service": "fsx"
+    },
+    {
+      "function": "list_vaults",
+      "service": "glacier"
+    },
+    {
+      "function": "list_jobs",
+      "service": "glue"
+    },
+    {
+      "function": "list_groups",
+      "service": "iam"
+    },
+    {
+      "function": "list_users",
+      "service": "iam"
+    },
+    {
+      "function": "list_functions",
+      "service": "lambda"
+    },
+    {
+      "function": "list_firewalls",
+      "service": "network-firewall"
+    },
+    {
+      "function": "describe_db_clusters",
+      "service": "rds"
+    },
+    {
+      "function": "describe_clusters",
+      "service": "redshift"
+    },
+    {
+      "function": "list_workgroups",
+      "service": "redshift-serverless"
+    },
+    {
+      "function": "list_buckets",
+      "service": "s3"
+    },
+    {
+      "function": "list_gateways",
+      "service": "storagegateway"
+    },
+    {
+      "function": "describe_workspaces",
+      "service": "workspaces"
+    }
+  ]

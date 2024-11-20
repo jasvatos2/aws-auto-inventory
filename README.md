@@ -44,7 +44,8 @@ cd aws-auto-inventory
 python3 -m venv .venv
 . .venv/bin/activate
 python -m pip install -r requirements.txt
-python zmulti-account-counts.py -s ascan.json -f service-counts.json -n OrganizationReadOnlyAccessRole -a accounts.txt -r us-gov-west-1
+# remember to change the s3 bucket name (-b option) to the local S3 bucket
+python zmulti-account-counts.py -s scan/amps-scan-list.json -f service-counts.json -n OrganizationReadOnlyAccessRole -a accounts.txt -r us-gov-west-1 -b <bucket-name> -k service-counts.json
 ```
 
 As this tool is a Python script, you need Python 3.6+ installed on your machine. If you have Python installed, you can directly run the script. Make sure you have installed the required Python libraries. Install them using pip:
