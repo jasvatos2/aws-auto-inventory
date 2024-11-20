@@ -148,10 +148,6 @@
       "service": "efs"
     },
     {
-      "function": "describe_mount_targets",
-      "service": "efs"
-    },
-    {
       "function": "list_clusters",
       "service": "eks"
     },
