@@ -35,15 +35,23 @@ The script provides:
 - Verbose logging, useful for troubleshooting and understanding the scanning process.
 - Results stored in JSON files, making it easy to feed the output into further data processing or visualization tools.
 
-## Installation
+## Installation (CloudShell)
+Run the following to set up the environment in AWS CloudShell
+```bash
+sudo dnf install autoconf automake bison libtool python3-devel
+git clone https://github.com/jasvatos2/aws-auto-inventory.git
+cd aws-auto-inventory
+python3 -m venv .venv
+. .venv/bin/activate
+python -m pip install -r requirements.txt
+# remember to change the s3 bucket name (-b option) to the local S3 bucket
+python zmulti-account-counts.py -s scan/amps-scan-list.json -f service-counts.json -n OrganizationReadOnlyAccessRole -a accounts.txt -r us-gov-west-1 -b <bucket-name> -k service-counts.json
+```
 
 As this tool is a Python script, you need Python 3.6+ installed on your machine. If you have Python installed, you can directly run the script. Make sure you have installed the required Python libraries. Install them using pip:
 
-```bash
-pip install -r requirements.txt
-```
 
-## Usage
+## Non-CloudShell Usage
 
 Before you start, make sure to set your AWS credentials either by using the AWS CLI:
 

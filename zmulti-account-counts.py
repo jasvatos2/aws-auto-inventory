@@ -49,8 +49,23 @@ def get_service_counts(output_dir, service_file_output):
     parse_service_counts(service_file_output, service_counts)
 
 
+def s3_upload(args):
+    # type: (Dict) -> None
+    upload_file = args.service_file_output
+    # verify file exists
+    if os.path.exists(upload_file):
+        s3 = boto3.client('s3')
+        s3.put_object(
+            Bucket=args.s3_bucket,
+            Key=args.s3_object_name
+            )
+    else:
+        raise Exception(f'{upload_file} does not exist')
+        
+
+
 def loop_accounts(args):
-    # type: (str) -> None
+    # type: (Dict) -> None
     """
     Loop AWS accounts and get service counts
     """
@@ -97,6 +112,11 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="List all resources in all AWS services and regions."
     )
+    #S3 object info if wanting to upload to bucket
+    s3pb = parser.add_argument_group(title='s3-bucket-info', description='s3 bucket upload information')
+    s3pb.add_argument('-b', '--s3-bucket', type=str, default=None, help='The S3 bucket key to upload the service count file to')
+    s3pb.add_argument('-k', '--s3-object-name', type=str, help='S3 object key name')
+    
     parser.add_argument('-n', '--role-name', type=str, required=True,
                         help='AWS role name to assume in each account')
     parser.add_argument('-a', '--accounts-file', type=str, required=True,
@@ -148,4 +168,5 @@ if __name__ == "__main__":
     )
     args = parser.parse_args()
 
-    loop_accounts(args)
+    # loop_accounts(args)
+    s3_upload(args)
